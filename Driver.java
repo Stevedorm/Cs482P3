@@ -4,14 +4,25 @@ public class Driver {
     public static boolean isPrintableASCII (byte b) {
         return b >= 32 && b < 127;
     }
-    
+
     public static void main (String[] args) {
         // [32, 127) for characters decrypted, check each cahracter.
         byte[] inKey = {(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x60, (byte) 0x00,
 					(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00,
 					(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x03};
+        //This is the IV: 354C0FCABE7852DF42BC9DD6EAAB495C
+        byte[] cbcIV = {
+            (byte) 0x35, (byte) 0x4C, (byte) 0x0F, (byte) 0xCA,
+            (byte) 0xBE, (byte) 0x78, (byte) 0x52, (byte) 0xDF,
+            (byte) 0x42, (byte) 0xBC, (byte) 0x9D, (byte) 0xD6,
+            (byte) 0xEA, (byte) 0xAB, (byte) 0x49, (byte) 0x5C
+        };
+        
+        while (true) {
+            if {}
 
-        // try {
+        }
+            // try {
         //     String textString = "This is a plaintext message to be encrypted by AES algorithm. It can be of any length.";
         //     byte[] inText = textString.getBytes();
 
