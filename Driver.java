@@ -41,3 +41,13 @@ public class Driver {
         // }
     }
 }
+
+
+
+			// for (int i=0; i < numOfCiphertextBlocks; i++) {
+			// 	for (int j=0; j < 16; j++) currentDecryptionBlock [j] = cipherText[(i+1)*16 + j]; // Note that the first block is the IV
+
+			// 	byte[] thisDecryptedBlock = Rijndael_Algorithm.blockDecrypt2 (currentDecryptionBlock, 0, decryptRoundKeys);
+			
+			// 	for (int j=0; j < 16; j++) cleartextBlocks[i*16+j] =  (byte) (thisDecryptedBlock[j] ^ cipherText[i*16 + j]);
+			// }
