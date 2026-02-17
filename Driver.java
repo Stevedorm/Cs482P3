@@ -1,6 +1,10 @@
 import java.io.*;
 import java.util.*;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+
 public class Driver {
     // This was generated, not what we need exactly.
 
@@ -8,36 +12,30 @@ public class Driver {
         return b >= 32 && b < 127;
     }
 
-    public static void main (String[] args) {
+    public static void main (String[] args) throws IOException {
         long time = System.currentTimeMillis();
         String inText = "354C0FCABE7852DF42BC9DD6EAAB495CCB8B6158C93E2D5D2A49387717657ECEB6CAD9A517BD123AE58C720DF9CDFEA3B4132FBAE66DF6001A032BF627FC406B3F71931E4F818265157028D2212DAD85";
         // [32, 127) for characters decrypted, check each cahracter.
         byte[] cipherText = inText.getBytes();
         byte[] receivedIV = new byte[16];
 		for (int i = 0; i < 16; i++) receivedIV[i] = cipherText[i];
-        int num_blocks = (cipherText.length / 16) - 1 ;
+        int num_blocks = 4;
 
         byte[] inKey = {(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x60, (byte) 0x00,
 					(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00,
 					(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x03};
         //This is the IV: 354C0FCABE7852DF42BC9DD6EAAB495C
         boolean loop_bool = true;
-        // Object decryptRoundKeys = null;
-        // try {
-        //     decryptRoundKeys = Rijndael_Algorithm.makeKey (Rijndael_Algorithm.DECRYPT_MODE, inKey); // 
-        // } catch (Exception e) {
-        //     e.printStackTrace();
-        // }
         // Object decryptRoundKeys = Rijndael_Algorithm.makeKey (Rijndael_Algorithm.DECRYPT_MODE, inKey); // 
-        int num = 1;
+        // int num = 1;
         while (loop_bool) {
             // outer loop that continues until plaintext is found.
                 // inner loop that continues until a valid plaintext is found.
                 try {
                     
-                    System.out.println(num);
-                    num++;
-                    byte[] cipherTextLoop = new byte[cipherText.length];
+                    // System.out.println(num);
+                    // num++;
+                    byte[] cipherTextLoop = Arrays.copyOfRange(cipherText, 16, cipherText.length);
 
                     Object decryptRoundKeys = Rijndael_Algorithm.makeKey (Rijndael_Algorithm.DECRYPT_MODE, inKey); // 
                     byte[] currentDecryptionBlock = new byte[16];
@@ -60,19 +58,21 @@ public class Driver {
 			        }
                     
                     if (all_printable) {
-                        System.out.println("Plaintext found: " + new String(cleartextBlocks));
-                        System.out.println("Plaintext found: " + new String(inKey));
+                        System.out.println(cleartextBlocks);
+                        System.out.println(inKey);
+                        // Files.writeString(Path.of("output.txt"), new String("Cleartext: " + cleartextBlocks +"\n"), StandardOpenOption.APPEND);
+                        // Files.writeString(Path.of("output.txt"), new String("Key: " + inKey + "\n\n"), StandardOpenOption.APPEND);
                         // loop_bool = false;
                         // break;
                     }
-                            for (int x = 0; x < 4; x++) {
-                                if (inKey[x] == (byte) 0xFF) {
-                                    inKey[x] = 0;
-                                } else {
-                                    inKey[x]++;
-                                break;
-                            }
+                    for (int x = 0; x < 4; x++) {
+                            if (inKey[x] == (byte) 0xFF) {
+                                inKey[x] = 0;
+                            } else {
+                                inKey[x]++;
+                            break;
                         }
+                    }
                             // decryptRoundKeys = Rijndael_Algorithm.makeKey (Rijndael_Algorithm.DECRYPT_MODE, inKey);
                         
                 } catch (Exception e) {
@@ -104,6 +104,8 @@ public class Driver {
                 // }
 
         }
+    System.out.println("time: " + time);
+    // Files.writeString(Path.of("time.txt"), String.valueOf(time), null);
             // try {
         //     String textString = "This is a plaintext message to be encrypted by AES algorithm. It can be of any length.";
         //     byte[] inText = textString.getBytes();
