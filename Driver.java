@@ -9,6 +9,7 @@ public class Driver {
     }
 
     public static void main (String[] args) {
+        long time = System.currentTimeMillis();
         String inText = "354C0FCABE7852DF42BC9DD6EAAB495CCB8B6158C93E2D5D2A49387717657ECEB6CAD9A517BD123AE58C720DF9CDFEA3B4132FBAE66DF6001A032BF627FC406B3F71931E4F818265157028D2212DAD85";
         // [32, 127) for characters decrypted, check each cahracter.
         byte[] cipherText = inText.getBytes();
@@ -21,20 +22,29 @@ public class Driver {
 					(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x03};
         //This is the IV: 354C0FCABE7852DF42BC9DD6EAAB495C
         boolean loop_bool = true;
+        // Object decryptRoundKeys = null;
+        // try {
+        //     decryptRoundKeys = Rijndael_Algorithm.makeKey (Rijndael_Algorithm.DECRYPT_MODE, inKey); // 
+        // } catch (Exception e) {
+        //     e.printStackTrace();
+        // }
+        // Object decryptRoundKeys = Rijndael_Algorithm.makeKey (Rijndael_Algorithm.DECRYPT_MODE, inKey); // 
+        int num = 1;
         while (loop_bool) {
             // outer loop that continues until plaintext is found.
                 // inner loop that continues until a valid plaintext is found.
                 try {
+                    
+                    System.out.println(num);
+                    num++;
                     byte[] cipherTextLoop = new byte[cipherText.length];
-                    // for (int i=0; i < 16; i++) cipherTextLoop[i] = cbcIV[i];
-                    // for (int i=0; i < 16; i++) cipherTextLoop[i] = inKey[i];
 
                     Object decryptRoundKeys = Rijndael_Algorithm.makeKey (Rijndael_Algorithm.DECRYPT_MODE, inKey); // 
                     byte[] currentDecryptionBlock = new byte[16];
                     byte[] cleartextBlocks = new byte[num_blocks * 16];
 
                     boolean all_printable = true;
-                    for (int i=0; i < num_blocks; i++) {
+                    for (int i = 0; i < num_blocks; i++) {
                         if (!all_printable) break;
 				        for (int j=0; j < 16; j++) currentDecryptionBlock [j] = cipherTextLoop[(i+1)*16 + j]; // Note that the first block is the IV
 
@@ -43,29 +53,55 @@ public class Driver {
                         for (int j=0; j < 16; j++) {
                             if (!isPrintableASCII(thisDecryptedBlock[j])) {
                                 all_printable = false;
-                                break;
+                                // break;
                             }
                         }
+                        for (int j=0; j < 16; j++) currentDecryptionBlock [j] = 0;
 			        }
                     
                     if (all_printable) {
                         System.out.println("Plaintext found: " + new String(cleartextBlocks));
-                        loop_bool = false;
-                        break;
+                        System.out.println("Plaintext found: " + new String(inKey));
+                        // loop_bool = false;
+                        // break;
                     }
+                            for (int x = 0; x < 4; x++) {
+                                if (inKey[x] == (byte) 0xFF) {
+                                    inKey[x] = 0;
+                                } else {
+                                    inKey[x]++;
+                                break;
+                            }
+                        }
+                            // decryptRoundKeys = Rijndael_Algorithm.makeKey (Rijndael_Algorithm.DECRYPT_MODE, inKey);
+                        
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+                // for (int i = 0; i < 4; i++) {
+                //     if (inKey[i] == (byte) 0xFF) {
+                //         inKey[i] = 0;
+                //     } else {
+                //         inKey[i]++;
+                //         break;
+                //     }
+                // }
+                // boolean first = true;
+                // // first iteration:
+                // if (first) {
+                //     byte temp = inKey[5];
+                //     temp = (byte) (temp & (byte) 0xe0);
+                // }
 
                 // increment the key
-                for (int i=15; i >= 0; i--) {
-                    if (inKey[i] == (byte) 0xFF) {
-                        inKey[i] = 0;
-                    } else {
-                        inKey[i]++;
-                        break;
-                    }
-                }
+                // for (int i=15; i >= 0; i--) {
+                //     if (inKey[i] == (byte) 0xFF) {
+                //         inKey[i] = 0;
+                //     } else {
+                //         inKey[i]++;
+                //         break;
+                //     }
+                // }
 
         }
             // try {
