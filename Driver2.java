@@ -33,7 +33,7 @@ public class Driver2 {
 					(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00,
 					(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x03};
 
-    public static void decrypt(byte[] Key){
+    public static boolean decrypt(byte[] Key){
         //boolean pass = false;
         try{
             Object decryptRoundKeys = Rijndael_Algorithm.makeKey (Rijndael_Algorithm.DECRYPT_MODE, inKey);
@@ -59,7 +59,7 @@ public class Driver2 {
 			}
             for(int i = 0; i < clearTextBlocks.length; i++){
                 if(!isPrintableASCII(clearTextBlocks[i])){
-                    return;
+                    return false;
                 }
             }
             String deciphered = new String(clearTextBlocks);
@@ -69,9 +69,11 @@ public class Driver2 {
                 System.out.print(Key[i]);
             }
             System.out.println();
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return true;
     }
 
     public static void main(String[] args){
@@ -91,16 +93,23 @@ public class Driver2 {
                     for (int l = 255; l >= 0; l--){
                         inKey[3] = (byte) l;
                         inKey[4] = (byte) 0x60;
-                        decrypt(inKey);
+                        if(decrypt(inKey)){
+                            long end = System.nanoTime();
+                            System.out.println("time elapsed: " + (end - start) / 1000000000 + " seconds");
+                            return;
+                        }
                         inKey[4] = (byte) 0xE0;
-                        decrypt(inKey);
+                        if(decrypt(inKey)){
+                            long end = System.nanoTime();
+                            System.out.println("time elapsed: " + (end - start) / 1000000000 + " seconds");
+                            return;
+                        }
 
                     }
                 }
             }
         }
-        long end = System.nanoTime();
-        System.out.println("time elapsed: " + (end - start) / 1000000000 + " seconds");
+
 
     }
 
