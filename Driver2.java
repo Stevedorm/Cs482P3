@@ -66,7 +66,7 @@ public class Driver2 {
             System.out.println("Cleartext: " + deciphered);
             System.out.print("Key: ");
             for(int i = 0; i < Key.length; i++){
-                System.out.print(Key[i]);
+                System.out.printf("%02X", Key[i]);
             }
             System.out.println();
             return true;
