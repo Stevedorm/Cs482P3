@@ -38,6 +38,7 @@ public class Task4 {
 
 			// byte[] inText = textString.getBytes();		    // This will return the ASCII encoding of the characters
 			int numOfBlocks = inText.length / 16; 		// Each AES block has 16 bytes
+			System.out.println(numOfBlocks);
 
 			Object roundKeys = Rijndael_Algorithm.makeKey (Rijndael_Algorithm.ENCRYPT_MODE, inKey); // This creates the round keys
 
@@ -64,6 +65,37 @@ public class Task4 {
 
 			System.out.println ("Ciphertext (including IV) is " + convertToString (cipherText));
 
+			//
+			// If you receive the ciphertext, assuming that you have the same symmetric key, how will you decrypt?
+			// Below, you only have inKey and cipherText
+			//
+			// System.out.println (System.getProperty ("line.separator") + "Decrypting ......");
+            //     	Object decryptRoundKeys = Rijndael_Algorithm.makeKey (Rijndael_Algorithm.DECRYPT_MODE, inKey); // 
+			// int numOfCiphertextBlocks = cipherText.length / 16 - 1; // Each AES block has 16 bytes and we need to exclude the IV
+			// byte[] cleartextBlocks = new byte[numOfCiphertextBlocks * 16];
+
+			// byte[] receivedIV = new byte[16];
+			// for (int i = 0; i < 16; i++) receivedIV[i] = cipherText[i];
+			// byte[] currentDecryptionBlock = new byte[16];
+
+			// for (int i=0; i < numOfCiphertextBlocks; i++) {
+			// 	for (int j=0; j < 16; j++) currentDecryptionBlock [j] = cipherText[(i+1)*16 + j]; // Note that the first block is the IV
+
+			// 	byte[] thisDecryptedBlock = Rijndael_Algorithm.blockDecrypt2 (currentDecryptionBlock, 0, decryptRoundKeys);
+			
+			// 	for (int j=0; j < 16; j++) cleartextBlocks[i*16+j] =  (byte) (thisDecryptedBlock[j] ^ cipherText[i*16 + j]);
+			// }
+
+			// String recoveredString = new String (cleartextBlocks);
+			// if (!recoveredString.equals (textString)) {
+            // 			System.out.println ("Decryption does NOT work!");
+			// 	System.out.println ("Recovered: " + recoveredString);
+			// 	System.out.println ("Original: " + textString);
+			// } else {
+			// 	System.out.println ("Recovered cleartext is " + recoveredString);
+			// 	System.out.println ("Decryption worked beautifully and recovered the original plaintext!");
+			// }
+
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -84,7 +116,7 @@ public class Task4 {
 
 	public static void main (String[] args) {
 		try {
-			AESExample aes = new AESExample();
+			Task4 aes = new Task4();
 
 			aes.testAESImplementationInCBC ();
 		} catch (Exception ex) {
