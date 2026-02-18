@@ -19,12 +19,16 @@ public class Driver {
         byte[] cipherText = inText.getBytes();
         byte[] receivedIV = new byte[16];
 		for (int i = 0; i < 16; i++) receivedIV[i] = cipherText[i];
+        System.out.println(Arrays.toString(receivedIV));
         int num_blocks = 4;
 
         byte[] inKey = {(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x60, (byte) 0x00,
 					(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00,
 					(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x03};
-        //This is the IV: 354C0FCABE7852DF42BC9DD6EAAB495C
+        // byte[] recievedIV = {(byte) 0x35, (byte) 0x4C, (byte) 0x0F, (byte) 0xCA, (byte) 0xBE, (byte) 0x78,
+		// 			(byte) 0x52, (byte) 0xDF, (byte) 0x42, (byte) 0xBC, (byte) 0x9D, (byte) 0xD6,
+		// 			(byte) 0xEA, (byte) 0xAB, (byte) 0x49, (byte) 0x5C};
+        //This is the IV: 35 4C 0F CA BE 78 52 DF 42 BC 9D D6 EA AB 49 5C
         boolean loop_bool = true;
         // Object decryptRoundKeys = Rijndael_Algorithm.makeKey (Rijndael_Algorithm.DECRYPT_MODE, inKey); // 
         // int num = 1;
@@ -32,15 +36,17 @@ public class Driver {
             // outer loop that continues until plaintext is found.
                 // inner loop that continues until a valid plaintext is found.
                 try {
-                    
-                    // System.out.println(num);
+                    // if (num % 100000000 == 0)  System.out.println(num);
                     // num++;
                     byte[] cipherTextLoop = Arrays.copyOfRange(cipherText, 16, cipherText.length);
 
                     Object decryptRoundKeys = Rijndael_Algorithm.makeKey (Rijndael_Algorithm.DECRYPT_MODE, inKey); // 
                     byte[] currentDecryptionBlock = new byte[16];
                     byte[] cleartextBlocks = new byte[num_blocks * 16];
-
+                    // System.out.println("Testing Key: ");
+                    // for(int i = 0; i < inKey.length; i++){
+                    //     System.out.print(inKey[i]);
+                    // }
                     boolean all_printable = true;
                     for (int i = 0; i < num_blocks; i++) {
                         if (!all_printable) break;
@@ -49,7 +55,7 @@ public class Driver {
 				        byte[] thisDecryptedBlock = Rijndael_Algorithm.blockDecrypt2 (currentDecryptionBlock, 0, decryptRoundKeys);
 				        for (int j=0; j < 16; j++) cleartextBlocks[i*16+j] =  (byte) (thisDecryptedBlock[j] ^ cipherTextLoop[i*16 + j]);
                         for (int j=0; j < 16; j++) {
-                            if (!isPrintableASCII(thisDecryptedBlock[j])) {
+                            if (!isPrintableASCII(cleartextBlocks[i*16+j])) {
                                 all_printable = false;
                                 // break;
                             }
@@ -62,7 +68,7 @@ public class Driver {
                         System.out.println(inKey);
                         // Files.writeString(Path.of("output.txt"), new String("Cleartext: " + cleartextBlocks +"\n"), StandardOpenOption.APPEND);
                         // Files.writeString(Path.of("output.txt"), new String("Key: " + inKey + "\n\n"), StandardOpenOption.APPEND);
-                        // loop_bool = false;
+                        loop_bool = false;
                         // break;
                     }
                     for (int x = 0; x < 4; x++) {
